@@ -1,73 +1,35 @@
 #include <stdio.h>
 
-// Structure to store sparse matrix elements
-// Only stores non-zero values to save memory
-struct Element {
-    int row;     // Row index
-    int col;     // Column index
-    int value;   // Non-zero value
-};
-
 int main() {
-    // Original sparse matrix (4x5) - many zeros
-    int sparse[4][5] = {
-        {0, 0, 3, 0, 4},
-        {0, 0, 5, 7, 0},
-        {0, 0, 0, 0, 0},
-        {0, 2, 6, 0, 0}
+    // Sparse matrix - a matrix with mostly zero values
+    // Only 3 non-zero elements out of 9 total
+    int sparse[3][3] = {
+        {0, 0, 3},  // Row 0: only position [0][2] has value
+        {4, 0, 0},  // Row 1: only position [1][0] has value
+        {0, 5, 0}   // Row 2: only position [2][1] has value
     };
     
-    printf("Original Sparse Matrix (4x5):\n");
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 5; j++) {
+    // Print the original sparse matrix
+    printf("Sparse Matrix:\n");
+    for (int i = 0; i < 3; i++) {          // Loop through rows
+        for (int j = 0; j < 3; j++) {      // Loop through columns
             printf("%d ", sparse[i][j]);
         }
-        printf("\n");
+        printf("\n");  // New line after each row
     }
     
-    // Count non-zero elements
-    int count = 0;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 5; j++) {
-            if (sparse[i][j] != 0) {
-                count++;
+    // Convert to compact form - store only non-zero values
+    // Format: [row position][column position][value]
+    // This saves memory by ignoring all the zeros
+    printf("\nCompact Form:\n");
+    printf("Row Col Value\n");
+    for (int i = 0; i < 3; i++) {          // Check each row
+        for (int j = 0; j < 3; j++) {      // Check each column
+            if (sparse[i][j] != 0) {       // Only store if non-zero
+                printf("%d   %d   %d\n", i, j, sparse[i][j]);
             }
         }
     }
-    
-    // Create compact representation
-    // Store only non-zero elements: [row][col][value]
-    struct Element compact[count];
-    int k = 0;  // Index for compact array
-    
-    // Fill compact array with non-zero values
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 5; j++) {
-            if (sparse[i][j] != 0) {
-                compact[k].row = i;
-                compact[k].col = j;
-                compact[k].value = sparse[i][j];
-                k++;
-            }
-        }
-    }
-    
-    // Display compact representation
-    printf("\nCompact Form (Row, Col, Value):\n");
-    printf("Row  Col  Value\n");
-    printf("----------------\n");
-    for (int i = 0; i < count; i++) {
-        printf("%2d   %2d   %2d\n", 
-               compact[i].row, 
-               compact[i].col, 
-               compact[i].value);
-    }
-    
-    // Memory comparison
-    printf("\nMemory Efficiency:\n");
-    printf("Original matrix: %lu bytes\n", sizeof(sparse));
-    printf("Compact form: %lu bytes\n", sizeof(compact));
-    printf("Space saved: %lu bytes\n", sizeof(sparse) - sizeof(compact));
     
     return 0;
 }
